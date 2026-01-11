@@ -1212,3 +1212,42 @@ What changes
 - Reasons are derived, not hand-written
 
 - You can read why option A beat option B
+
+### Property based test cases , not the example tests
+
+Why not example tests?
+
+Example tests answer:
+
+- “Does this work for this input?”
+
+Property tests answer:
+
+- “What must always be true, no matter the input?”
+
+Decision engines fail in the second category, not the first.
+
+You already ran examples.
+Now we attack the laws.
+
+### What we test next ( the non-negotiables )
+
+Law 1 - Determinism
+
+Same events -> same decision, every time.
+
+If this breaks, the engine is lying.
+
+law 2 - Conservation
+
+Total allocated <= total available
+
+if this breaks, you are creating resources from thin air.
+
+Law 3 - Capacity safety
+
+No valid decision allocates more than an agent's capacity
+
+If this breaks, state is being ignored.
+
+

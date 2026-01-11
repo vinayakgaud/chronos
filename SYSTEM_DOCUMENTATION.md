@@ -1232,22 +1232,35 @@ Now we attack the laws.
 
 ### What we test next ( the non-negotiables )
 
-Law 1 - Determinism
+1) Law 1 - Determinism
 
 Same events -> same decision, every time.
 
 If this breaks, the engine is lying.
 
-law 2 - Conservation
+2) Law 2 - Conservation
 
 Total allocated <= total available
 
 if this breaks, you are creating resources from thin air.
 
-Law 3 - Capacity safety
+3) Law 3 - Capacity safety
 
 No valid decision allocates more than an agent's capacity
 
 If this breaks, state is being ignored.
+
+4) Law 4 - Starvation monotonicity
+
+Giving nothing to a requesting agent must never score higher than giving something, all else equal.
+
+If this breaks, the engined prefers cruelty.
+
+5) law 5 - Replayability
+
+Reducing events in chunks vs all at once must yield the same state.
+
+If this breaks, time ordering is corrupt.
+
 
 

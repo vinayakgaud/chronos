@@ -1,5 +1,6 @@
 {
   "name": "chronos",
+  "author": "Vinayak Gaud",
   "module": "index.ts",
   "type": "module",
   "private": true,
@@ -11,7 +12,7 @@
   },
   "scripts": {
     "start": "bun run ./engine.ts",
-    "dev": "bun --watch ./engine.ts",
-    "build": "tsc"
+    "dev": "bun run ./engine.ts",
+    "build": "tsc --noEmit"
   }
 }

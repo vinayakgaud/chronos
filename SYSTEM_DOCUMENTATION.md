@@ -1200,3 +1200,15 @@ What this loop must do
 - Explain why it ranked things that way
 
 That’s it.
+
+## Step 6 — Explanations as a First-Class Output
+
+A decision that can’t explain itself is a rumor.
+
+What changes
+
+- Every scored option carries structured reasons
+
+- Reasons are derived, not hand-written
+
+- You can read why option A beat option B

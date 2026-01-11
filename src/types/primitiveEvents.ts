@@ -29,3 +29,5 @@ type State = {
   available: number,
   agents: Record<string, AgentState>
 }
+
+export type { PrimitiveEvent, State, AgentState };

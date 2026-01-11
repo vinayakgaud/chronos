@@ -1,3 +1,7 @@
+import { type Allocation, scoreAllocation } from "./decisionScoring";
+import stateReducer from "./stateReducer";
+import type { PrimitiveEvent, State } from "./types/primitiveEvents";
+
 const decide = (events: PrimitiveEvent[]) => {
   //Initial State
   const initial: State = {time: 0, available: 0, agents: {}};
@@ -21,4 +25,4 @@ const decide = (events: PrimitiveEvent[]) => {
   return candidates.map(c => scoreAllocation(state, c)).filter(r=>r.valid).sort((a,b)=> b.score - a.score)
 }
 
-
+export default decide;

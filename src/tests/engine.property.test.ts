@@ -1,8 +1,10 @@
 import fc from "fast-check";
 import decide from "../engineFunction";
 import { type PrimitiveEvent } from "../types/primitiveEvents";
+import { test } from "bun:test";
 
-const eventsArbitrary = fc.array(
+//arbitrary for generating events
+export const eventsArbitrary = fc.array(
   fc.oneof(
     fc.record({
       type: fc.constant("AgentJoined"),
@@ -25,13 +27,17 @@ const eventsArbitrary = fc.array(
   ), { minLength: 1, maxLength: 20 }
 )
 
-fc.assert(
-  fc.property(eventsArbitrary, (events: PrimitiveEvent[])=>{
-    const a = decide(events);
-    const b = decide(events);
+//base property check
+test('Basic engine check', ()=>{
+  fc.assert(
+    fc.property(eventsArbitrary, (events: PrimitiveEvent[])=>{
+      const a = decide(events);
+      const b = decide(events);
 
-    //deep equality check
-    return JSON.stringify(a) === JSON.stringify(b);
-  })
-)
+      //deep equality check
+      return JSON.stringify(a) === JSON.stringify(b);
+    })
+  )
+})
+
 

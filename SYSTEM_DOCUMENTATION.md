@@ -1,4 +1,4 @@
-# Copyright (c) 2026 Author. All Rights Reserved.
+# Copyright (c) 2026 Kuro. All Rights Reserved.
 # Chronos Engine - it is a Deterministic Decision Engine
 
 - A software system that ensures identical inputs always produce identical outputs, following fixed rules or models without randomness

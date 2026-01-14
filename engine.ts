@@ -1,5 +1,5 @@
-import type { PrimitiveEvent } from "./src/types/primitiveEvents";
-import decide from "./src/engineFunction";
+import type { PrimitiveEvent } from "./src/engine/types/primitiveEvents";
+import decide from "./src/engine/engineFunction";
 
 console.log("Starting Decision Engine...");
 

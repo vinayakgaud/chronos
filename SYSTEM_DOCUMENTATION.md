@@ -1263,4 +1263,18 @@ Reducing events in chunks vs all at once must yield the same state.
 If this breaks, time ordering is corrupt.
 
 
+### What you just learned about GraphQL (important)
 
+Without realizing it, you learned:
+
+- Schema ≠ Code
+
+- GraphQL is pull-based (client chooses shape)
+
+- Resolvers are field-level execution
+
+- GraphQL is not tied to databases
+
+GraphQL is ideal for decision engines
+
+This is real GraphQL usage.

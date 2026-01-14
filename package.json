@@ -12,9 +12,14 @@
     "typescript": "^5"
   },
   "scripts": {
-    "start": "bun run ./engine.ts",
-    "dev": "bun run ./engine.ts",
+    "start:engine": "bun run ./engine.ts",
+    "start:server": "bun run ./server.ts",
     "build": "tsc --noEmit",
     "test": "bun test ./src/tests --verbose"
+  },
+  "dependencies": {
+    "@graphql-tools/schema": "^10.0.31",
+    "graphql": "^16.12.0",
+    "graphql-yoga": "^5.18.0"
   }
 }

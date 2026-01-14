@@ -3,11 +3,11 @@ This is the determinstic decision making engine
 run using bun run scripts
 
 - ```bun run start:engine``` (to run engine directly in node env)
-- ``` bun run start:server``` (to run engine as a graphql server)
+- ```bun run start:server``` (to run engine as a graphql server)
 
 after running the server, open graphiql at http://localhost:4000/graphql
 
-and run below query for example
+- run below example query to test the engine
 
 ```
 query {
@@ -37,6 +37,7 @@ query {
 ```
 
 - expected output:  
+
 ```
 {
   "data": {

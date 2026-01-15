@@ -42,8 +42,8 @@ export const stateReducer = (state: State, event: PrimitiveEvent): State =>{
         newAgents[agentId] = {
           capacity: agent.capacity ?? 0,
           allocated: 0, //reset for next tick
-          requested: 0, //reset requests each tick
-          starvationTicks: agent.allocated === 0 ? agent.starvationTicks + 1 : 0
+          requested: agent.requested, //reset requests each tick
+          starvationTicks: agent.allocated === 0 && agent.requested > 0 ? agent.starvationTicks + 1 : 0
         }
       }
       return {

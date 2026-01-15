@@ -1,23 +1,20 @@
 import type { Allocation } from '../decisionScoring';
 
 type Reason = | {
-  kind: "Fulfillment", agentId: string, value: number
+  kind: "Fulfillment", agentId: string, ratio: number
 } | {
-  kind: "StarvationRisk", agentId: string
+  kind: "Starvation", agentId: string, ticks?: number
 } | {
   kind: "StarvationHistory", agentId: string, ticks: number
 } | {
-  kind: "CapacityExceeded", agentId: string,
-} | {
-  kind: "ScarcityPenalty", excess: number
-} | {
   kind: "AgentMissing", agentId: string
+} | {
+  kind: "ImbalancePenalty", variance: number
 }
 
 
 type ScoredDecision = {
   allocation: Allocation,
-  valid: boolean,
   score: number,
   reason : Reason[]
 }

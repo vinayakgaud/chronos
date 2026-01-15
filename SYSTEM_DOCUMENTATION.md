@@ -1278,3 +1278,54 @@ Without realizing it, you learned:
 GraphQL is ideal for decision engines
 
 This is real GraphQL usage.
+
+### Hard Constraints for Real Systems
+
+- We will teach the engine to reject impossible allocations outright, instead of merely scoring them badly.
+
+- “This option is not just bad — it is impossible.”
+This prevents dangerous decisions from sneaking through.
+
+### Soft rule vs Hard constraint (important distinction)
+Soft rule (what you already have)
+
+- starvation penalty
+- fairness penalty
+- priority weighting
+
+These affect ranking.
+
+Hard constraint (what we add now)
+
+- allocation > available
+- allocation > capacity
+- allocation to non-existent agent
+
+These affect existence.
+
+An option that violates a hard constraint should:
+
+- never be scored
+
+- never be ranked
+
+- never be returned as valid
+
+### Architectural Decision (Critical)
+We will enforce constrains in one place only
+- Inside the engine, before scoring
+
+```
+Events
+↓
+State
+↓
+Generate candidate allocations
+↓
+FILTER by hard constraints   ← NEW
+↓
+Score remaining allocations
+↓
+Rank decisions
+```
+

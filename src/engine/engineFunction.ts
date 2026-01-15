@@ -1,6 +1,7 @@
 import { type Allocation, scoreAllocation } from "./decisionScoring";
 import stateReducer from "./stateReducer";
 import type { PrimitiveEvent, State } from "./types/primitiveEvents";
+import { checkConstraints } from "./constraints";
 
 const decide = (events: PrimitiveEvent[]) => {
   //Initial State
@@ -22,7 +23,14 @@ const decide = (events: PrimitiveEvent[]) => {
     }
   ];
 
-  return candidates.map(c => scoreAllocation(state, c)).filter(r=>r.valid).sort((a,b)=> b.score - a.score)
+  const evaluatedCandidates = candidates.map(allocation => {
+    const constraint = checkConstraints(state, allocation);
+    return {allocation, constraint};
+  })
+  // evaluatedCandidates.forEach(c=> console.log("allocation:", c.allocation, "constraint:", c.constraint))
+  const constrainedCandidates = evaluatedCandidates.filter(r=> r.constraint.ok).map(r=> r.allocation);
+
+  return constrainedCandidates.map(c => scoreAllocation(state, c)).sort((a,b)=> b.score - a.score)
 }
 
 export default decide;

@@ -13,15 +13,11 @@ const events: PrimitiveEvent[] = [
 ]
 
 console.log("Processing Events:");
-for( const e of events){
-  console.log(e);
-}
+
 const decisions = decide(events);
 
 for(const d of decisions){
   console.log("Decision:");
-  console.log("----");
-  console.log("Valid:", d.valid);
   console.log("----");
   console.log("Agent Allocation Scores and Reasons:");
   console.log("Allocation:", d.allocation);

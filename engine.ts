@@ -1,31 +1,37 @@
 import type { PrimitiveEvent } from "./src/engine/types/primitiveEvents";
 import {decide} from "./src/engine/engineFunction";
-import {candidateId} from "./src/engine/engineFunction";
+import {v4 as uuid_v4} from "uuid";
+import readline from "readline";
+
+let rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+})
+
+const events: PrimitiveEvent[] = [];
+
+const question = (query: string) => {
+  return new Promise<string>((resolve)=>{
+    rl.question(query,resolve)
+  }).finally(()=> rl.close())
+}
+
+const numOfAgents: number = parseInt(await question("Enter number of agents to simulate: "));
+
+function eventCreation(numOfAgents: number): PrimitiveEvent[]{
+  for(let i=0;i<numOfAgents;i++){
+    const agentId = uuid_v4().slice(0,4);
+    events.push({ type: "AgentJoined", agentId, capacity: 5 + Math.floor(Math.random()*6)});
+    events.push({ type: "AgentRequested", agentId, amount: 3 + Math.floor(Math.random()*5)});
+  }
+  events.push({ type: "ResourceAdded", amount: 15 });
+  events.push({ type: "TimeAdvanced", tick: 1 });
+  return events;
+}
 
 console.log("Starting Decision Engine...");
-
-const events: PrimitiveEvent[] = [
-  { type: "AgentJoined", agentId: "A", capacity: 7 },
-  { type: "AgentJoined", agentId: "B", capacity: 5 },
-  { type: "ResourceAdded", amount: 6 },
-  { type: "AgentRequested", agentId: "A", amount: 6 },
-  { type: "AgentRequested", agentId: "B", amount: 4 },
-  { type: "TimeAdvanced", tick: 1 },
-]
-
-// const events: PrimitiveEvent[] = [];
-
-// for(const [agentId, requested] of Object.entries(candidateId)){
-//   events.push({type: "AgentJoined", agentId, capacity: requested + (Math.floor(Math.random()*4))});
-//   events.push({type: "AgentRequested", agentId, amount: requested});
-// }
-// events.push({type: "ResourceAdded", amount: 15});
-// events.push({type: "TimeAdvanced", tick: 1});
-
-
 console.log("Processing Events:");
-
-const decisions = decide(events);
+const decisions = decide(eventCreation(numOfAgents));
 
 for(const d of decisions){
   console.log("Decision:");
@@ -38,3 +44,4 @@ for(const d of decisions){
 }
 
 console.log("Decision Engine Finished.");
+

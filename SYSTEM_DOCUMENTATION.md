@@ -1256,7 +1256,9 @@ Giving nothing to a requesting agent must never score higher than giving somethi
 
 If this breaks, the engined prefers cruelty.
 
-5) law 5 - Replayability
+5) Law 5 - Replayability
+
+6) Law 6 - Query Stability
 
 Reducing events in chunks vs all at once must yield the same state.
 

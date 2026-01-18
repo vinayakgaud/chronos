@@ -1,5 +1,5 @@
 import {test, expect, describe} from "bun:test";
-import decide from "../../engine/engineFunction.ts";
+import {decide, decideFromState} from "../../engine/engineFunction.ts";
 import { type PrimitiveEvent, type State } from "../../engine/types/primitiveEvents.ts";
 import fc from "fast-check";
 import {eventsArbitrary} from '../engine.property.test.ts';
@@ -157,6 +157,31 @@ describe('Property test for laws of engines',()=>{
         
         expect(decisionsInChunks).toEqual(decisionsAllAtOnce);
         //decisions must be the same
+      })
+    )
+  }),
+  /**
+   * For any event stream E
+   * and any split index k
+   * decide(E) === decide(E[0..k] + E[k+1..n])
+   * + is replay
+   * same input history -> same output decision
+   * “No matter how I split the event stream,
+      the final decision ordering is identical.”
+   */
+  test("Law 6 - Query Stability: The same history must always produce the same decision.", ()=>{
+    fc.assert(
+      fc.property(eventsArbitrary,fc.integer({min: 0, max: 50}), (events: PrimitiveEvent[], splitIndex)=>{
+        const fullDecide = decide(events);
+        const initial:State = {time: 0, available: 0, agents: {}};
+        const firstChunkSplit = events.slice(0, splitIndex);
+        const secondChunkSplit = events.slice(splitIndex);
+
+        const midState = firstChunkSplit.reduce(stateReducer, initial);
+        const finalState = secondChunkSplit.reduce(stateReducer, midState)
+        
+        const decideFromStateResult = decideFromState(finalState);
+        expect(decideFromStateResult).toEqual(fullDecide);
       })
     )
   })

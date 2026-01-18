@@ -1,5 +1,5 @@
 import fc from "fast-check";
-import decide from "../engine/engineFunction";
+import {decide} from "../engine/engineFunction";
 import { type PrimitiveEvent } from "../engine/types/primitiveEvents";
 import { test } from "bun:test";
 

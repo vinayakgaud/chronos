@@ -66,4 +66,14 @@ export const typeDefinitionSchema = `
   type Query {
     decision(events: [PrimitiveEventInput!]!): Decision!
   }
+
+  type DecisionResult {
+    options: [DecisionOption!]!
+  }
+
+  type DecisionOption {
+    allocation: [AllocationEntry!]!
+    score: Float!
+    reasons: [Reason!]!
+  }
 `

@@ -1,7 +1,7 @@
 //Resolvers (thin, honest layer)
 //“Given this question, how do we compute the answer?”
 
-import decide from "../engine/engineFunction";
+import {decide} from "../engine/engineFunction";
 import { type PrimitiveEvent } from "../engine/types/primitiveEvents";
 
 export const resolvers = {
@@ -26,7 +26,6 @@ export const resolvers = {
         options: decisions.map(decision =>({
           allocation: Object.entries(decision.allocation).map(([agentId, amount])=> ({agentId, amount})),
           score: decision.score,
-          valid: decision.valid,
           reasons: decision.reason
         }))
       }

@@ -29,15 +29,14 @@ export const scoreAllocation = (state: State, allocation: Allocation): ScoredDec
       score += reward;
       reasons.push({kind: "Fulfillment", agentId, ratio});
     }
-
-    //imbalance penalty
-    const values = Object.values(allocation)
-    const mean = values.reduce((value1,value2)=> value1+value2,0) / values.length;
-    const variance = values.reduce((sum, value)=> sum + Math.pow(value - mean, 2), 0)/values.length
-    if(variance > 0){
-      score -= variance * 0.5;
-      reasons.push({kind: "ImbalancePenalty", variance});
-    }
+  }
+  //imbalance penalty
+  const values = Object.values(allocation)
+  const mean = values.reduce((value1,value2)=> value1+value2,0) / values.length;
+  const variance = values.reduce((sum, value)=> sum + Math.pow(value - mean, 2), 0)/values.length
+  if(variance > 0){
+    score -= variance * 0.5;
+    reasons.push({kind: "ImbalancePenalty", variance});
   }
   return {allocation, score: Math.round(score * 100)/ 100, reason: reasons};
 }

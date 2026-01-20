@@ -1,5 +1,5 @@
 import {test, expect, describe} from "bun:test";
-import {decide, decideFromState} from "../../engine/engineFunction.ts";
+import {decideFromEvents, decideFromState} from "../../engine/engineFunction.ts";
 import { type PrimitiveEvent, type State } from "../../engine/types/primitiveEvents.ts";
 import fc from "fast-check";
 import {eventsArbitrary} from '../engine.property.test.ts';
@@ -10,8 +10,8 @@ describe('Property test for laws of engines',()=>{
   test('Law 1 - Determinism: Given the same sequence of events, the engine should always produce the same outcome.', ()=>{
     fc.assert(
       fc.property(eventsArbitrary, (events: PrimitiveEvent[])=>{
-        const resultOne = decide(events);
-        const resultTwo = decide(events);
+        const resultOne = decideFromEvents(events);
+        const resultTwo = decideFromEvents(events);
 
         expect(resultOne).toStrictEqual(resultTwo);
       })
@@ -27,7 +27,7 @@ describe('Property test for laws of engines',()=>{
 
     fc.assert(
       fc.property(eventsArbitrary, (events: PrimitiveEvent[])=>{
-        const result = decide(events);
+        const result = decideFromEvents(events);
         const availableResource = totalAvailableResource(events);
 
         result.forEach(allocationResult => {
@@ -52,7 +52,7 @@ describe('Property test for laws of engines',()=>{
 
     fc.assert(
       fc.property(eventsArbitrary, (events: PrimitiveEvent[])=>{
-        const result = decide(events);
+        const result = decideFromEvents(events);
         const capacity = agentCapacity(events);
 
         result.forEach(allocationResult => {
@@ -152,8 +152,8 @@ describe('Property test for laws of engines',()=>{
         expect(finalStateInChunks).toEqual(finalStateAllAtOnce);
         //states must be the same
 
-        const decisionsAllAtOnce = decide(events);
-        const decisionsInChunks = decide(events);
+        const decisionsAllAtOnce = decideFromEvents(events);
+        const decisionsInChunks = decideFromEvents(events);
         
         expect(decisionsInChunks).toEqual(decisionsAllAtOnce);
         //decisions must be the same
@@ -172,7 +172,7 @@ describe('Property test for laws of engines',()=>{
   test("Law 6 - Query Stability: The same history must always produce the same decision.", ()=>{
     fc.assert(
       fc.property(eventsArbitrary,fc.integer({min: 0, max: 50}), (events: PrimitiveEvent[], splitIndex)=>{
-        const fullDecide = decide(events);
+        const fullDecide = decideFromEvents(events);
         const initial:State = {time: 0, available: 0, agents: {}};
         const firstChunkSplit = events.slice(0, splitIndex);
         const secondChunkSplit = events.slice(splitIndex);

@@ -1,12 +1,12 @@
 //Resolvers (thin, honest layer)
 //“Given this question, how do we compute the answer?”
 
-import {decide} from "../engine/engineFunction";
+import {decideFromEvents} from "../engine/engineFunction";
 import { type PrimitiveEvent } from "../engine/types/primitiveEvents";
 
 export const resolvers = {
   Query: {
-    decision: (_parent: unknown, args: {events: PrimitiveEvent[]})=>{
+    decision: (_parent: unknown, args: {events: PrimitiveEvent[], seed: number, topK: number})=>{
       //non short hand form
       /**
        * decision: (
@@ -15,12 +15,12 @@ export const resolvers = {
         ) => {
           const events = args.events;
       */
-      if(!args || !args?.events){
+      if(!args || !args?.events || !args?.seed || !args?.topK){
         throw new Error("No events provided to decision resolver");
       }
-      const { events } = args;
+      const { events, seed, topK } = args;
       console.log("Incoming events:", events);
-      const decisions = decide(events);
+      const decisions = decideFromEvents(events, seed);
       console.log("Decisions:", decisions);
       return {
         options: decisions.map(decision =>({

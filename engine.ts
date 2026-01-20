@@ -1,5 +1,5 @@
 import type { PrimitiveEvent } from "./src/engine/types/primitiveEvents";
-import {decide} from "./src/engine/engineFunction";
+import {decideFromEvents} from "./src/engine/engineFunction";
 import {v4 as uuid_v4} from "uuid";
 import readline from "readline";
 
@@ -31,7 +31,7 @@ function eventCreation(numOfAgents: number): PrimitiveEvent[]{
 
 console.log("Starting Decision Engine...");
 console.log("Processing Events:");
-const decisions = decide(eventCreation(numOfAgents));
+const decisions = decideFromEvents(eventCreation(numOfAgents));
 
 for(const d of decisions){
   console.log("Decision:");

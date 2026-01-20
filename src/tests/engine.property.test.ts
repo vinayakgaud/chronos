@@ -1,5 +1,5 @@
 import fc from "fast-check";
-import {decide} from "../engine/engineFunction";
+import {decideFromEvents} from "../engine/engineFunction";
 import { type PrimitiveEvent } from "../engine/types/primitiveEvents";
 import { test } from "bun:test";
 
@@ -31,8 +31,8 @@ export const eventsArbitrary = fc.array(
 test('Basic engine check', ()=>{
   fc.assert(
     fc.property(eventsArbitrary, (events: PrimitiveEvent[])=>{
-      const a = decide(events);
-      const b = decide(events);
+      const a = decideFromEvents(events);
+      const b = decideFromEvents(events);
 
       //deep equality check
       return JSON.stringify(a) === JSON.stringify(b);

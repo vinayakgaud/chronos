@@ -8,10 +8,12 @@ function generateCandidate(state: State, seed: number): Allocation[]{
   const agents = state.agents;
   const available = state.available;
   const candidates: Allocation[] = [];
-  const randomGenerator = (seed: number)=>{
-    const x = Math.sin(seed++)*1000;
-    return x - Math.floor(x);
-  }
+  const randomGenerator = (()=>{
+    return () =>{
+      const x = Math.sin(seed++)* 1000;
+      return x - Math.floor(x);
+    }
+  })();
 
   for(let i=0; i<10; i++){
     let remaining = available;
@@ -19,7 +21,7 @@ function generateCandidate(state: State, seed: number): Allocation[]{
       for(const [agentId, agent] of Object.entries(agents)){
         if(remaining <= 0) break;
         const maxForAgent = Math.min(remaining, agent.capacity, agent.requested);
-        const allocationPerAgent = Math.floor(randomGenerator(seed++) * (maxForAgent + 1));
+        const allocationPerAgent = Math.floor(randomGenerator() * (maxForAgent + 1));
         allocation[agentId] = allocationPerAgent;
         remaining -= allocationPerAgent;
       }
@@ -28,36 +30,37 @@ function generateCandidate(state: State, seed: number): Allocation[]{
   return candidates;
 }
 
-const uniqueCandidatesSet = (candidates: Allocation[]): Allocation[]=>{
-  const uniqueSet = new Set<string>();
-  const uniqueCandidates: Allocation[] = [];
+function removeRepeatedCandidate(candidates: Allocation[]): Allocation[]{
+  const candidateSet = new Set<string>();
+  const nonRepeatedCandidate: Allocation[] = [];
   for(const candidate of candidates){
     const key = JSON.stringify(candidate);
-    if(!uniqueSet.has(key)){
-      uniqueSet.add(key);
-      uniqueCandidates.push(candidate);
+    if(!candidateSet.has(key)){
+      candidateSet.add(key);
+      nonRepeatedCandidate.push(candidate);
     }
   }
-  return uniqueCandidates;
+  return nonRepeatedCandidate;
 }
 
-export function decideFromState(state: State): ScoredDecision[]{
-  const candidates = generateCandidate(state, 2000);
-  const uniqueCandidates = uniqueCandidatesSet(candidates);
-  console.log("generated candidates", candidates);
-  const evaluatedCandidates = uniqueCandidates.map(allocation => {
-    const constraint = checkConstraints(state, allocation);
-    return {allocation, constraint};
-  })
-  evaluatedCandidates.forEach(c=> console.log("allocation:", c.allocation, "constraint:", c.constraint))
-  const constrainedCandidates = evaluatedCandidates.filter(r=> r.constraint.ok).map(r=> r.allocation);
-
-  return constrainedCandidates.map(c => scoreAllocation(state, c)).sort((a,b)=> b.score - a.score || JSON.stringify(a.allocation).localeCompare(JSON.stringify(b.allocation)))
+function filteredFeasibleCandidate(state: State, candidates: Allocation[]): Allocation[]{
+  return candidates.filter(allocation => checkConstraints(state, allocation).ok);
 }
 
-export const decide = (events: PrimitiveEvent[]):ScoredDecision[] => {
+function scoreAndRankCandidates(state: State, candidates: Allocation[]): ScoredDecision[]{
+  return candidates.map(candidate => scoreAllocation(state,candidate)).sort((a,b)=> b.score - a.score || JSON.stringify(a.allocation).localeCompare(JSON.stringify(b.allocation)));
+}
+
+export function decideFromState(state: State, seed: number): ScoredDecision[]{
+  const explored = generateCandidate(state, seed);
+  const uniqueCandidate = removeRepeatedCandidate(explored);
+  const feasibleCandidates = filteredFeasibleCandidate(state, uniqueCandidate);
+  return scoreAndRankCandidates(state, feasibleCandidates);
+}
+
+export function decideFromEvents(events: PrimitiveEvent[], seed: number):ScoredDecision[]{
   const initial:State = {time: 0, available: 0, agents: {}};
   const state = events.reduce(stateReducer, initial);
-  return decideFromState(state);
+  return decideFromState(state, seed);
 }
 

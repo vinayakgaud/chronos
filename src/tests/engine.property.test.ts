@@ -3,6 +3,7 @@ import {decideFromEvents} from "../engine/engineFunction";
 import { type PrimitiveEvent } from "../engine/types/primitiveEvents";
 import { test } from "bun:test";
 
+const options = {seed: 2000, topK: undefined};
 //arbitrary for generating events
 export const eventsArbitrary = fc.array(
   fc.oneof(
@@ -31,8 +32,8 @@ export const eventsArbitrary = fc.array(
 test('Basic engine check', ()=>{
   fc.assert(
     fc.property(eventsArbitrary, (events: PrimitiveEvent[])=>{
-      const a = decideFromEvents(events);
-      const b = decideFromEvents(events);
+      const a = decideFromEvents(events, options);
+      const b = decideFromEvents(events, options);
 
       //deep equality check
       return JSON.stringify(a) === JSON.stringify(b);

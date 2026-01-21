@@ -1,27 +1,14 @@
-//Resolvers (thin, honest layer)
-//“Given this question, how do we compute the answer?”
-
 import {decideFromEvents} from "../engine/engineFunction";
 import { type PrimitiveEvent } from "../engine/types/primitiveEvents";
 
 export const resolvers = {
   Query: {
-    decision: (_parent: unknown, args: {events: PrimitiveEvent[], seed: number, topK: number})=>{
-      //non short hand form
-      /**
-       * decision: (
-          _parent: unknown,
-          args: { events: PrimitiveEvent[] }
-        ) => {
-          const events = args.events;
-      */
-      if(!args || !args?.events || !args?.seed || !args?.topK){
+    decision: (_parent: unknown, args: {events: PrimitiveEvent[],seed: number, topK?: number})=>{
+      if(!args || !args?.events || !args?.seed){
         throw new Error("No events provided to decision resolver");
       }
       const { events, seed, topK } = args;
-      console.log("Incoming events:", events);
-      const decisions = decideFromEvents(events, seed);
-      console.log("Decisions:", decisions);
+      const decisions = decideFromEvents(events,{seed, topK});
       return {
         options: decisions.map(decision =>({
           allocation: Object.entries(decision.allocation).map(([agentId, amount])=> ({agentId, amount})),
@@ -31,36 +18,5 @@ export const resolvers = {
       }
     }
   }
-}
-//{events}: {events: PrimitiveEvent[]} //in yoga write in correct resolver signature
-/**
- * error received, storing for future references:
- * {
-    "message": "Unexpected error.",
-    "path": ["decision"],
-    "code": "INTERNAL_SERVER_ERROR"
-  }
-“The GraphQL query shape is valid,
-but your resolver threw an exception at runtime.”
- */
-//first principle 
-/**
- * If GraphQL returns INTERNAL_SERVER_ERROR,
-the bug is always in your resolver or the code it calls.
- */
+};
 
-//Step 1 - Make the error visible (critical) using maskedErrors
-// actual error after setting maskedErrors to false:
-/**
- * {
-  "errors": [
-      {
-        "message": "Cannot destructure property 'events' from null or undefined value",
-        "path": [
-          "decision"
-        ]
-      }
-    ],
-    "data": null
-  }
- */

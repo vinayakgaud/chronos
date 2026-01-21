@@ -51,16 +51,17 @@ function scoreAndRankCandidates(state: State, candidates: Allocation[]): ScoredD
   return candidates.map(candidate => scoreAllocation(state,candidate)).sort((a,b)=> b.score - a.score || JSON.stringify(a.allocation).localeCompare(JSON.stringify(b.allocation)));
 }
 
-export function decideFromState(state: State, seed: number): ScoredDecision[]{
-  const explored = generateCandidate(state, seed);
+export function decideFromState(state: State, options: {seed: number, topK?: number}): ScoredDecision[]{
+  const explored = generateCandidate(state, options.seed);
   const uniqueCandidate = removeRepeatedCandidate(explored);
   const feasibleCandidates = filteredFeasibleCandidate(state, uniqueCandidate);
-  return scoreAndRankCandidates(state, feasibleCandidates);
+  const rankedDecision = scoreAndRankCandidates(state, feasibleCandidates);
+  return rankedDecision.slice(0, options.topK);
 }
 
-export function decideFromEvents(events: PrimitiveEvent[], seed: number):ScoredDecision[]{
+export function decideFromEvents(events: PrimitiveEvent[], options: {seed: number, topK?: number}):ScoredDecision[]{
   const initial:State = {time: 0, available: 0, agents: {}};
   const state = events.reduce(stateReducer, initial);
-  return decideFromState(state, seed);
+  return decideFromState(state, options);
 }
 

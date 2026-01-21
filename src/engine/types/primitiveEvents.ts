@@ -1,6 +1,3 @@
-//Events
-//Defining the primitives
-
 type PrimitiveEvent = | {
   type: "AgentJoined",
   agentId: string,

@@ -6,12 +6,14 @@ import {eventsArbitrary} from '../engine.property.test.ts';
 import { scoreAllocation } from "../../engine/decisionScoring.ts";
 import stateReducer from "../../engine/stateReducer.ts";
 
+const options = {seed: 1000, topK: undefined};
+
 describe('Property test for laws of engines',()=>{
   test('Law 1 - Determinism: Given the same sequence of events, the engine should always produce the same outcome.', ()=>{
     fc.assert(
       fc.property(eventsArbitrary, (events: PrimitiveEvent[])=>{
-        const resultOne = decideFromEvents(events);
-        const resultTwo = decideFromEvents(events);
+        const resultOne = decideFromEvents(events, options);
+        const resultTwo = decideFromEvents(events, options);
 
         expect(resultOne).toStrictEqual(resultTwo);
       })
@@ -27,7 +29,7 @@ describe('Property test for laws of engines',()=>{
 
     fc.assert(
       fc.property(eventsArbitrary, (events: PrimitiveEvent[])=>{
-        const result = decideFromEvents(events);
+        const result = decideFromEvents(events, options);
         const availableResource = totalAvailableResource(events);
 
         result.forEach(allocationResult => {
@@ -52,7 +54,7 @@ describe('Property test for laws of engines',()=>{
 
     fc.assert(
       fc.property(eventsArbitrary, (events: PrimitiveEvent[])=>{
-        const result = decideFromEvents(events);
+        const result = decideFromEvents(events, options);
         const capacity = agentCapacity(events);
 
         result.forEach(allocationResult => {
@@ -152,8 +154,8 @@ describe('Property test for laws of engines',()=>{
         expect(finalStateInChunks).toEqual(finalStateAllAtOnce);
         //states must be the same
 
-        const decisionsAllAtOnce = decideFromEvents(events);
-        const decisionsInChunks = decideFromEvents(events);
+        const decisionsAllAtOnce = decideFromEvents(events, options);
+        const decisionsInChunks = decideFromEvents(events, options);
         
         expect(decisionsInChunks).toEqual(decisionsAllAtOnce);
         //decisions must be the same
@@ -172,7 +174,7 @@ describe('Property test for laws of engines',()=>{
   test("Law 6 - Query Stability: The same history must always produce the same decision.", ()=>{
     fc.assert(
       fc.property(eventsArbitrary,fc.integer({min: 0, max: 50}), (events: PrimitiveEvent[], splitIndex)=>{
-        const fullDecide = decideFromEvents(events);
+        const fullDecide = decideFromEvents(events, options);
         const initial:State = {time: 0, available: 0, agents: {}};
         const firstChunkSplit = events.slice(0, splitIndex);
         const secondChunkSplit = events.slice(splitIndex);
@@ -180,7 +182,7 @@ describe('Property test for laws of engines',()=>{
         const midState = firstChunkSplit.reduce(stateReducer, initial);
         const finalState = secondChunkSplit.reduce(stateReducer, midState)
         
-        const decideFromStateResult = decideFromState(finalState);
+        const decideFromStateResult = decideFromState(finalState, options);
         expect(decideFromStateResult).toEqual(fullDecide);
       })
     )

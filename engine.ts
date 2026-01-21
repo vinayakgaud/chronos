@@ -10,7 +10,7 @@ let rl = readline.createInterface({
 
 const events: PrimitiveEvent[] = [];
 
-const question = (query: string) => {
+const question =async (query: string) => {
   return new Promise<string>((resolve)=>{
     rl.question(query,resolve)
   }).finally(()=> rl.close())
@@ -31,7 +31,7 @@ function eventCreation(numOfAgents: number): PrimitiveEvent[]{
 
 console.log("Starting Decision Engine...");
 console.log("Processing Events:");
-const decisions = decideFromEvents(eventCreation(numOfAgents));
+const decisions = decideFromEvents(eventCreation(numOfAgents), {seed: 1000, topK: undefined});
 
 for(const d of decisions){
   console.log("Decision:");

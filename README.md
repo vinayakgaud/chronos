@@ -19,7 +19,7 @@ query {
       {type: AgentRequested, agentId: "A", amount: 6}
       {type: AgentRequested, agentId: "B", amount: 4}
       {type: TimeAdvanced, tick: 1}
-    ]
+    ], seed: 2000, topK: 3
   ) {
     options {
       allocation {

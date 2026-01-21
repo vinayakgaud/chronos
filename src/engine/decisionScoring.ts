@@ -21,7 +21,6 @@ export const scoreAllocation = (state: State, allocation: Allocation): ScoredDec
       reasons.push({kind: "Starvation", agentId, ticks: agent.starvationTicks});
       continue
     }
-    console.log(agentId, "requested:", agent.requested, "allocated:", amount);
     //Fulfillment Reward
     if(amount > 0 && agent.requested > 0){
       const ratio = Math.min(amount/agent.requested, 1);

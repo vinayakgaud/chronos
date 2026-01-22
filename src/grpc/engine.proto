@@ -1,0 +1,76 @@
+syntax = "proto3";
+package chronos.engine.v1;
+
+// --------------------
+// Event vocabulary
+// --------------------
+enum EventType {
+  EVENT_TYPE_UNSPECIFIED = 0;
+  AGENT_JOINED = 1;
+  AGENT_REQUESTED = 2;
+  RESOURCE_ADDED = 3;
+  TIME_ADVANCED = 4;
+}
+
+// --------------------
+// Incoming event
+// --------------------
+message Event {
+  EventType type = 1;
+  string agent_id = 2;
+  int32 capacity = 3;
+  int32 tick = 4;
+  int32 amount = 5;
+}
+
+// --------------------
+// Streaming envelope
+// --------------------
+message EventEnvelope {
+  string session_id = 1;
+  int64 sequence_number = 2;
+  Event event = 3;
+}
+
+// --------------------
+// Decision explanation
+// --------------------
+message Reason {
+  string kind = 1;
+  string agent_id = 2;
+  double ratio = 3;
+  int32 ticks = 4;
+  double variance = 5;
+}
+
+// --------------------
+// Allocation result
+// --------------------
+message AllocationEntry {
+  string agent_id = 1;
+  int32 amount = 2;
+}
+
+message DecisionOption {
+  repeated AllocationEntry allocations = 1;
+  repeated Reason reasons = 2;
+  double score = 3;
+}
+
+// --------------------
+// Outgoing decision
+// --------------------
+message DecisionEnvelope {
+  string session_id = 1;
+  int64 state_version = 2;
+  repeated DecisionOption options = 3;
+}
+
+
+// --------------------
+// Streaming service
+// --------------------
+service DecisionEngine {
+  // StreamDecisions processes a stream of incoming events and returns a stream of decision options.
+  rpc StreamDecisions(stream EventEnvelope) returns (stream DecisionEnvelope);
+}

@@ -3,6 +3,12 @@
 
 - A software system that ensures identical inputs always produce identical outputs, following fixed rules or models without randomness
 
+## An explainable, deterministic policy engine for resource allocation & scheduling.
+
+### Designed and implemented a deterministic, replay-safe, explainable decision engine with GraphQL and gRPC streaming, enforcing fairness and starvation constraints.
+
+### An open-source deterministic policy engine for fair scheduling and resource allocation, with GraphQL simulation and gRPC streaming execution.
+
 1) A Strategy Engine
 2) A real time analytics core
 3) And a simulation lab for sharp thinking

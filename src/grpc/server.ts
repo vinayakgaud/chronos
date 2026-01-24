@@ -16,9 +16,9 @@ const packageDef = protoLoader.loadSync(PROTO_PATH, {
 
 const proto = grpc.loadPackageDefinition(packageDef) as any;
 
-const engineProto = proto.chronos.engine.v1;
+export const engineProto = proto.chronos.engine.v1;
 
-function streamDecision(call: grpc.ServerDuplexStream<any, any>){
+export function streamDecision(call: grpc.ServerDuplexStream<any, any>){
   //one session per stream
   const session = new Session(2000, 5);
 
@@ -47,14 +47,3 @@ function streamDecision(call: grpc.ServerDuplexStream<any, any>){
     console.error("Stream error: ", err);
   })
 }
-
-const server = new grpc.Server();
-
-server.addService(engineProto.DecisionEngine.service, {
-  StreamDecisions: streamDecision
-})
-
-server.bindAsync("0.0.0.0:50051", grpc.ServerCredentials.createInsecure(), ()=>{
-  console.log("gRPC Decision Engine running on :50051");
-  server.start();
-})

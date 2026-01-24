@@ -14,6 +14,7 @@
   "scripts": {
     "start:engine": "bun run ./engine.ts",
     "start:server": "bun run ./server.ts",
+    "start:grpc": "bun run ./grpcServer.ts",
     "build": "tsc --noEmit",
     "test": "bun test ./src/tests --verbose"
   },

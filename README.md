@@ -4,6 +4,7 @@ run using bun run scripts
 
 - ```bun run start:engine``` (to run engine directly in node env)
 - ```bun run start:server``` (to run engine as a graphql server)
+- ```bun run start:grpc``` (to run grpc server)
 
 after running the server, open graphiql at http://localhost:4000/graphql
 
@@ -47,29 +48,6 @@ query {
           "allocation": [
             {
               "agentId": "A",
-              "amount": 3
-            },
-            {
-              "agentId": "B",
-              "amount": 3
-            }
-          ],
-          "score": 0,
-          "reasons": [
-            {
-              "kind": "Fulfillment",
-              "agentId": "A"
-            },
-            {
-              "kind": "Fulfillment",
-              "agentId": "B"
-            }
-          ]
-        },
-        {
-          "allocation": [
-            {
-              "agentId": "A",
               "amount": 4
             },
             {
@@ -77,7 +55,7 @@ query {
               "amount": 2
             }
           ],
-          "score": 0,
+          "score": 11.17,
           "reasons": [
             {
               "kind": "Fulfillment",
@@ -86,6 +64,10 @@ query {
             {
               "kind": "Fulfillment",
               "agentId": "B"
+            },
+            {
+              "kind": "ImbalancePenalty",
+              "agentId": null
             }
           ]
         },
@@ -94,13 +76,28 @@ query {
             {
               "agentId": "A",
               "amount": 6
+            }
+          ],
+          "score": 10,
+          "reasons": [
+            {
+              "kind": "Fulfillment",
+              "agentId": "A"
+            }
+          ]
+        },
+        {
+          "allocation": [
+            {
+              "agentId": "A",
+              "amount": 3
             },
             {
               "agentId": "B",
-              "amount": 0
+              "amount": 2
             }
           ],
-          "score": 0,
+          "score": 9.88,
           "reasons": [
             {
               "kind": "Fulfillment",
@@ -109,6 +106,10 @@ query {
             {
               "kind": "Fulfillment",
               "agentId": "B"
+            },
+            {
+              "kind": "ImbalancePenalty",
+              "agentId": null
             }
           ]
         }

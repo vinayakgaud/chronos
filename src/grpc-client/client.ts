@@ -43,7 +43,7 @@ let sequence_number = 0;
 function sendEvent(event: any){
   stream.write({
     session_id: sessionId,
-    sequence_number,
+    sequence_number: sequence_number++,
     event
   })
 }

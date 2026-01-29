@@ -4,6 +4,7 @@ import * as grpc from "@grpc/grpc-js"
 import * as protoLoader from "@grpc/proto-loader"
 import path from "path"
 import { secureHeaders } from "hono/secure-headers";
+import { EventType } from "../grpc/types";
 
 const app = new Hono();
 app.use("*", secureHeaders({
@@ -57,11 +58,21 @@ app.get("/", (c)=>{
   `);
 })
 
+let closed = false;
+
 app.get("/stream", (c)=>{
   const encoder = new TextEncoder()
 
   const stream = new ReadableStream({
     start(controller){
+
+      const safeClose = () =>{
+        if(!closed){
+          closed = true,
+          controller.close()
+        }
+      }
+
       const client = new enginePackage.DecisionEngine(
         "localhost:50051",
         grpc.credentials.createInsecure()
@@ -76,12 +87,12 @@ app.get("/stream", (c)=>{
       })
 
       grpcStream.on("end", ()=>{
-        controller.close()
+        safeClose
       })
 
       grpcStream.on("error", (err: Error)=>{
         console.error(err)
-        controller.close()
+        safeClose
       })
 
       //seed demo events
@@ -96,16 +107,16 @@ app.get("/stream", (c)=>{
         })
       }
 
-      send({ type: "AGENT_JOINED", agent_id: "A", capacity: 7 })
-      send({ type: "AGENT_JOINED", agent_id: "B", capacity: 5 })
-      send({ type: "AGENT_REQUESTED", agent_id: "A", amount: 6 })
-      send({ type: "AGENT_REQUESTED", agent_id: "B", amount: 4 })
-      send({ type: "RESOURCE_ADDED", amount: 6 })
-      send({ type: "TIME_ADVANCED", tick: 1 })
+      send({ type: EventType.AGENT_JOINED, agent_id: "A", capacity: 7 })
+      send({ type: EventType.AGENT_JOINED, agent_id: "B", capacity: 5 })
+      send({ type: EventType.AGENT_REQUESTED, agent_id: "A", amount: 6 })
+      send({ type: EventType.AGENT_REQUESTED, agent_id: "B", amount: 4 })
+      send({ type: EventType.RESOURCE_ADDED, amount: 6 })
+      send({ type: EventType.TIME_ADVANCED, tick: 1 })
 
       c.req.raw.signal.addEventListener("abort", ()=>{
         grpcStream.end()
-        controller.close()
+        safeClose()
       })
     }
   })

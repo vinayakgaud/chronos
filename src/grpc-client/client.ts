@@ -1,6 +1,7 @@
 import * as grpc from "@grpc/grpc-js"
 import * as protoLoader from "@grpc/proto-loader"
 import path from "path"
+import { EventType } from "../grpc/types";
 
 const PROTO_PATH = path.join(__dirname, "engine.proto");
 
@@ -50,36 +51,36 @@ function sendEvent(event: any){
 
 //simulate a timeline of events
 sendEvent({
-  type: "AGENT_JOINED",
+  type: EventType.AGENT_JOINED,
   agent_id: "A",
   capacity: 7,
 });
 
 sendEvent({
-  type: "AGENT_JOINED",
+  type: EventType.AGENT_JOINED,
   agent_id: "B",
   capacity: 5,
 });
 
 sendEvent({
-  type: "AGENT_REQUESTED",
+  type: EventType.AGENT_REQUESTED,
   agent_id: "A",
   amount: 6,
 });
 
 sendEvent({
-  type: "AGENT_REQUESTED",
+  type: EventType.AGENT_REQUESTED,
   agent_id: "B",
   amount: 4,
 });
 
 sendEvent({
-  type: "RESOURCE_ADDED",
+  type: EventType.RESOURCE_ADDED,
   amount: 6,
 });
 
 sendEvent({
-  type: "TIME_ADVANCED",
+  type: EventType.TIME_ADVANCED,
   tick: 1,
 });
 

@@ -1,7 +1,8 @@
 syntax = "proto3";
 package chronos.engine.v1;
 
-option go_package = "chronos-go-client/gen/engine;engine";
+option go_package = "github.com/vinayakgaud/chronos/src/go-client/gen/enginev1;enginev1";
+
 
 // --------------------
 // Event vocabulary

@@ -4,7 +4,7 @@
 // - protoc             v6.33.4
 // source: proto/engine.proto
 
-package engine
+package enginev1
 
 import (
 	context "context"

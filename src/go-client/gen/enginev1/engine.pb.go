@@ -4,7 +4,7 @@
 // 	protoc        v6.33.4
 // source: proto/engine.proto
 
-package engine
+package enginev1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -519,7 +519,7 @@ const file_proto_engine_proto_rawDesc = "" +
 	"\x0eRESOURCE_ADDED\x10\x03\x12\x11\n" +
 	"\rTIME_ADVANCED\x10\x042n\n" +
 	"\x0eDecisionEngine\x12\\\n" +
-	"\x0fStreamDecisions\x12 .chronos.engine.v1.EventEnvelope\x1a#.chronos.engine.v1.DecisionEnvelope(\x010\x01B%Z#chronos-go-client/gen/engine;engineb\x06proto3"
+	"\x0fStreamDecisions\x12 .chronos.engine.v1.EventEnvelope\x1a#.chronos.engine.v1.DecisionEnvelope(\x010\x01BDZBgithub.com/vinayakgaud/chronos/src/go-client/gen/enginev1;enginev1b\x06proto3"
 
 var (
 	file_proto_engine_proto_rawDescOnce sync.Once

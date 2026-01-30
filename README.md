@@ -118,3 +118,18 @@ query {
   }
 }
 ```
+
+```go mod init module_name``` for initiating go project
+
+```
+protoc \
+  --go_out=gen \
+  --go_opt=paths=source_relative \
+  --go-grpc_out=gen \
+  --go-grpc_opt=paths=source_relative \
+  proto/engine.proto
+``` 
+
+for generating go format proto generated file to be used
+
+```go run ./cmd/chronos-client``` to run executable main.go file

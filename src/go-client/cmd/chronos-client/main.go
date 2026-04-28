@@ -36,14 +36,37 @@ func main() {
 
 	//Send first event to wake the engine
 	firstEvent := &enginev1.EventEnvelope{
-		SessionId: "go-session-1",
+		SessionId:      "go-session-1",
 		SequenceNumber: 1,
 		Event: &enginev1.Event{
-			Type: enginev1.EventType_AGENT_JOINED,
-			AgentId: "agent-go-1",
+			Type:     enginev1.EventType_AGENT_JOINED,
+			AgentId:  "agent-go-1",
 			Capacity: 10,
-			Tick: 1,
-			Amount: 0,
+			Tick:     1,
+			Amount:   0,
+		},
+	}
+
+	secondEvent := &enginev1.EventEnvelope{
+		SessionId:      "go-session-1",
+		SequenceNumber: 2,
+		Event: &enginev1.Event{
+			Type:     enginev1.EventType_AGENT_JOINED,
+			AgentId:  "agent-go-2",
+			Capacity: 20,
+			Tick:     1,
+			Amount:   0,
+		},
+	}
+
+	thirdEvent := &enginev1.EventEnvelope{
+		SessionId:      "go-session-1",
+		SequenceNumber: 3,
+		Event: &enginev1.Event{
+			Type:    enginev1.EventType_AGENT_REQUESTED,
+			AgentId: "agent-go-1",
+			Tick:    1,
+			Amount:  6,
 		},
 	}
 
@@ -53,11 +76,22 @@ func main() {
 		log.Fatal("send failed: ", err)
 	}
 	log.Println("event sent")
-
+	log.Println("sending second event...")
+	err = stream.Send(secondEvent)
+	if err != nil {
+		log.Fatal("send failed: ", err)
+	}
+	log.Println("event sent")
+	log.Println("sending third event...")
+	err = stream.Send(thirdEvent)
+	if err != nil {
+		log.Fatal("send failed: ", err)
+	}
+	log.Println("event sent")
 	//receive messages forever (for now)
 	for {
 		decision, err := stream.Recv()
-		if err != nil{
+		if err != nil {
 			log.Println("stream ended: ", err)
 			return
 		}
